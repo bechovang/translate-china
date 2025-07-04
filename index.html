@@ -3,87 +3,433 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Translator (Stable - Singapore)</title>
-    <style>@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');:root{--bg-color:#1f1f1f;--surface-color:#2a2a2a;--primary-color:#8ab4f8;--text-color:#e8eaed;--secondary-text-color:#9aa0a6;--border-color:#3c4043;--button-bg:#3c4043;--button-hover-bg:#4a4f53;--status-processing-bg:#4a3c0b;--status-error-bg:#4d1818}*{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0}body{font-family:'Be Vietnam Pro',sans-serif;background-color:var(--bg-color);color:var(--text-color);display:flex;justify-content:center;align-items:center;min-height:100vh;padding:1rem}.container{width:100%;max-width:900px;background-color:var(--surface-color);border-radius:16px;padding:2rem;-webkit-box-shadow:0 4px 30px rgba(0,0,0,.5);box-shadow:0 4px 30px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:1rem}.translation-wrapper{display:flex;flex-direction:row;align-items:stretch;gap:1rem;width:100%}.panel{flex:1;display:flex;flex-direction:column;padding:1rem;border:1px solid var(--border-color);border-radius:12px}.lang-label{font-weight:500;font-size:1.1rem;text-align:center;margin-bottom:1rem;color:var(--secondary-text-color)}textarea{width:100%;flex-grow:1;background-color:transparent;border:none;color:var(--text-color);font-size:1.5rem;resize:none;margin-bottom:1rem}textarea:focus{outline:none}.panel-controls{display:flex;justify-content:flex-start;align-items:center;gap:1rem}.action-btn{background-color:var(--button-bg);border:none;color:var(--text-color);width:50px;height:50px;border-radius:50%;cursor:pointer;display:flex;justify-content:center;align-items:center;-webkit-transition:background-color .2s ease;transition:background-color .2s ease}.action-btn:hover:not(:disabled){background-color:var(--button-hover-bg)}.action-btn:disabled{background-color:#2a2a2a;color:#5f6368;cursor:not-allowed}.action-btn.recording{background-color:#d93025;-webkit-animation:pulsate 1.5s infinite;animation:pulsate 1.5s infinite}.action-btn svg{width:24px;height:24px;fill:currentColor}.center-controls{display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding-top:40px;gap:1rem}.status-bar{text-align:center;padding:.75rem;background-color:var(--bg-color);border-radius:8px;font-size:.9rem;min-height:2.5em;-webkit-transition:all .3s;transition:all .3s;border:1px solid var(--border-color);display:flex;justify-content:center;align-items:center;gap:.5rem;word-break:break-word;color:var(--secondary-text-color)}.status-processing{background-color:var(--status-processing-bg);border-color:#fdd663;color:#fdd663}.status-error{background-color:var(--status-error-bg);border-color:#f28b82;color:#f28b82}.spinner{border:3px solid rgba(255,255,255,.2);border-top:3px solid var(--primary-color);border-radius:50%;width:1.2em;height:1.2em;-webkit-animation:spin 1s linear infinite;animation:spin 1s linear infinite}.hidden{display:none}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@-webkit-keyframes pulsate{0%{-webkit-box-shadow:0 0 0 0 rgba(217,48,37,.7);box-shadow:0 0 0 0 rgba(217,48,37,.7)}70%{-webkit-box-shadow:0 0 0 10px rgba(217,48,37,0);box-shadow:0 0 0 10px rgba(217,48,37,0)}100%{-webkit-box-shadow:0 0 0 0 rgba(217,48,37,0);box-shadow:0 0 0 0 rgba(217,48,37,0)}}@keyframes pulsate{0%{-webkit-box-shadow:0 0 0 0 rgba(217,48,37,.7);box-shadow:0 0 0 0 rgba(217,48,37,.7)}70%{-webkit-box-shadow:0 0 0 10px rgba(217,48,37,0);box-shadow:0 0 0 10px rgba(217,48,37,0)}100%{-webkit-box-shadow:0 0 0 0 rgba(217,48,37,0);box-shadow:0 0 0 0 rgba(217,48,37,0)}}@media (max-width:768px){.container{padding:1rem}.translation-wrapper{flex-direction:column;align-items:center}.center-controls{flex-direction:row;padding-top:0}#swap-btn{-webkit-transform:rotate(90deg);transform:rotate(90deg)}textarea{height:120px;font-size:1.2rem;flex-grow:0}}</style>
+    <title>AI Translator | Giao diện mới</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
+
+        /* --- THEME TRẮNG-ĐỎ HIỆN ĐẠI --- */
+        :root {
+            --bg-color: #f7f8fa;
+            --surface-color: #ffffff;
+            --primary-color: #d93025; /* Màu đỏ chủ đạo */
+            --primary-text-color: #ffffff;
+            --text-color: #202124;
+            --secondary-text-color: #5f6368;
+            --border-color: #dadce0;
+            --button-bg: #f1f3f4;
+            --button-hover-bg: #e8eaed;
+            --status-processing-bg: #e8f0fe; /* Xanh dương nhạt cho trạng thái xử lý */
+            --status-processing-text: #1967d2;
+            --status-error-bg: #fce8e6;    /* Đỏ nhạt cho trạng thái lỗi */
+            --status-error-text: #c5221f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Canh trên để dễ xem trên desktop */
+            min-height: 100vh;
+            padding: 2rem 1rem; /* Thêm padding trên dưới */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+            text-align: center;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .translation-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        .lang-label {
+            font-weight: 500;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--secondary-text-color);
+        }
+
+        textarea {
+            width: 100%;
+            flex-grow: 1;
+            background-color: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem; /* Tăng kích thước chữ mặc định */
+            resize: none;
+            margin-bottom: 1rem;
+            min-height: 150px;
+        }
+
+        textarea:focus {
+            outline: none;
+        }
+        
+        textarea::placeholder {
+            color: #bdc1c6;
+            font-weight: 400;
+        }
+
+        .panel-controls {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0.75rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .action-btn {
+            background-color: transparent;
+            border: 1px solid transparent;
+            color: var(--secondary-text-color);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color .2s ease, color .2s ease;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background-color: var(--button-bg);
+        }
+
+        .action-btn:disabled {
+            color: #bdc1c6;
+            cursor: not-allowed;
+        }
+
+        .action-btn.recording {
+            background-color: var(--primary-color);
+            color: var(--primary-text-color);
+            animation: pulsate 1.5s infinite;
+        }
+
+        .action-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .center-controls {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding-top: 40px; /* Đẩy nút xuống giữa 2 panel */
+            gap: 1rem;
+        }
+        
+        /* --- Nút Dịch Chính --- */
+        #translate-btn {
+            background-color: var(--primary-color);
+            color: var(--primary-text-color);
+            border: none;
+        }
+
+        #translate-btn:hover:not(:disabled) {
+            opacity: 0.9;
+            background-color: var(--primary-color);
+        }
+        
+        #translate-btn:disabled {
+            background-color: #e0e0e0;
+            color: #9e9e9e;
+        }
+
+        .status-bar {
+            text-align: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            min-height: 2.75em;
+            transition: all .3s;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: .75rem;
+            word-break: break-word;
+            color: var(--secondary-text-color);
+        }
+
+        .status-processing {
+            background-color: var(--status-processing-bg);
+            border-color: var(--status-processing-text);
+            color: var(--status-processing-text);
+        }
+
+        .status-error {
+            background-color: var(--status-error-bg);
+            border-color: var(--status-error-text);
+            color: var(--status-error-text);
+        }
+
+        .spinner {
+            border: 3px solid rgba(0,0,0,.1);
+            border-top: 3px solid var(--status-processing-text);
+            border-radius: 50%;
+            width: 1.2em;
+            height: 1.2em;
+            animation: spin 1s linear infinite;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulsate {
+            0% { box-shadow: 0 0 0 0 rgba(217, 48, 37, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(217, 48, 37, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 48, 37, 0); }
+        }
+
+        /* --- Tối ưu hóa cho Mobile --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0; /* Bỏ padding ngang của body */
+            }
+            .container {
+                padding: 1.5rem 1rem;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+                height: 100vh;
+            }
+
+            .translation-wrapper {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            textarea {
+                font-size: 1.2rem;
+                min-height: 120px;
+                flex-grow: 1; /* Cho phép co giãn trên mobile */
+            }
+
+            .center-controls {
+                flex-direction: row;
+                padding-top: 0;
+                order: 1; /* Đưa nút điều khiển lên giữa 2 panel */
+                justify-content: center;
+            }
+
+            #swap-btn {
+                transform: rotate(90deg);
+            }
+            
+            .panel:first-child { order: 0; }
+            .panel:last-child { order: 2; }
+        }
+    </style>
 </head>
 <body>
+
 <div class="container">
+    <header>
+        <h1>AI Translator</h1>
+    </header>
+    
     <div class="translation-wrapper">
+        <!-- Panel bên trái (Nguồn) -->
         <div class="panel">
-            <div class="lang-label" id="lang-label-left">Tiếng Việt</div><textarea id="text-left" placeholder="Nhập văn bản"></textarea>
+            <div class="lang-label" id="lang-label-left">Tiếng Việt</div>
+            <textarea id="text-left" placeholder="Nhập văn bản..."></textarea>
             <div class="panel-controls">
-                <button class="action-btn" id="record-btn-left" title="Ghi âm"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/></svg></button>
-                <button class="action-btn" id="play-btn-left" title="Phát lại" disabled><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
+                <button class="action-btn" id="record-btn-left" title="Ghi âm">
+                    <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/></svg>
+                </button>
+                <button class="action-btn" id="play-btn-left" title="Phát lại" disabled>
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                </button>
             </div>
         </div>
+
+        <!-- Nút điều khiển trung tâm -->
         <div class="center-controls">
-            <button class="action-btn" id="swap-btn" title="Đảo chiều dịch">⇄</button>
-            <button class="action-btn" id="translate-btn" title="Dịch văn bản"><svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg></button>
+            <button class="action-btn" id="swap-btn" title="Đảo chiều dịch">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="18" x2="12" y2="6"></line><polyline points="7 11 12 6 17 11"></polyline><line x1="12" y1="6" x2="12" y2="18"></line><polyline points="17 13 12 18 7 13"></polyline></svg>
+            </button>
+            <button class="action-btn" id="translate-btn" title="Dịch văn bản">
+                <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+            </button>
         </div>
+
+        <!-- Panel bên phải (Đích) -->
         <div class="panel">
             <div class="lang-label" id="lang-label-right">Tiếng Trung</div>
             <textarea id="text-right" placeholder="Bản dịch" readonly></textarea>
             <div class="panel-controls">
-                <button class="action-btn" id="record-btn-right" title="Ghi âm"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/></svg></button>
-                <button class="action-btn" id="play-btn-right" title="Phát lại" disabled><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
+                <button class="action-btn" id="record-btn-right" title="Ghi âm">
+                     <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/></svg>
+                </button>
+                <button class="action-btn" id="play-btn-right" title="Phát lại" disabled>
+                    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                </button>
             </div>
         </div>
     </div>
-    <div class="status-bar" id="status-bar"><div class="spinner hidden" id="spinner"></div><span id="status-text">Sẵn sàng.</span></div>
+    
+    <div class="status-bar" id="status-bar">
+        <div class="spinner hidden" id="spinner"></div>
+        <span id="status-text">Sẵn sàng.</span>
+    </div>
 </div>
+
 <script>
+    // --- JavaScript không thay đổi về logic, chỉ cập nhật để tương thích với cấu trúc mới nếu cần ---
     const dom = {
         labels: { left: document.getElementById('lang-label-left'), right: document.getElementById('lang-label-right') },
         textareas: { left: document.getElementById('text-left'), right: document.getElementById('text-right') },
-        buttons: { recordLeft: document.getElementById('record-btn-left'), playLeft: document.getElementById('play-btn-left'), recordRight: document.getElementById('record-btn-right'), playRight: document.getElementById('play-btn-right'), swap: document.getElementById('swap-btn'), translate: document.getElementById('translate-btn') },
-        statusBar: document.getElementById('status-bar'), statusText: document.getElementById('status-text'), spinner: document.getElementById('spinner')
+        buttons: {
+            recordLeft: document.getElementById('record-btn-left'),
+            playLeft: document.getElementById('play-btn-left'),
+            recordRight: document.getElementById('record-btn-right'),
+            playRight: document.getElementById('play-btn-right'),
+            swap: document.getElementById('swap-btn'),
+            translate: document.getElementById('translate-btn')
+        },
+        statusBar: document.getElementById('status-bar'),
+        statusText: document.getElementById('status-text'),
+        spinner: document.getElementById('spinner')
     };
+
     const CLOUD_FUNCTION_URL = "https://asia-southeast1-speach-to-text-462517.cloudfunctions.net/universal-api-proxy";
-    let state = { isRecording: false, isProcessing: false, activeRecorder: null, direction: 'vi-to-zh', mediaRecorder: null, audioChunks: [] };
-    const langConfig = { vi: { name: 'Tiếng Việt', stt: 'vi-VN', tts: 'vi-VN-Wavenet-D', translate: 'vi' }, zh: { name: 'Tiếng Trung', stt: 'cmn-CN', tts: 'cmn-CN-Wavenet-A', translate: 'zh-CN' } };
+    
+    let state = {
+        isRecording: false,
+        isProcessing: false,
+        activeRecorder: null,
+        direction: 'vi-to-zh',
+        mediaRecorder: null,
+        audioChunks: []
+    };
+    
+    const langConfig = {
+        vi: { name: 'Tiếng Việt', stt: 'vi-VN', tts: 'vi-VN-Wavenet-D', translate: 'vi' },
+        zh: { name: 'Tiếng Trung', stt: 'cmn-CN', tts: 'cmn-CN-Wavenet-A', translate: 'zh-CN' }
+    };
 
     function updateUiState(message, status = 'idle') {
-        dom.statusText.textContent = message; dom.statusBar.className = 'status-bar'; dom.spinner.classList.add('hidden');
-        if (status !== 'idle') { dom.statusBar.classList.add(`status-${status}`); if (status === 'processing') dom.spinner.classList.remove('hidden'); }
+        dom.statusText.textContent = message;
+        dom.statusBar.className = 'status-bar';
+        dom.spinner.classList.add('hidden');
+        
+        if (status !== 'idle') {
+            dom.statusBar.classList.add(`status-${status}`);
+            if (status === 'processing') {
+                dom.spinner.classList.remove('hidden');
+            }
+        }
+        
         const isBusy = state.isProcessing || state.isRecording;
         Object.values(dom.buttons).forEach(btn => btn.disabled = isBusy);
+        
         if (state.isRecording) {
-            if (state.activeRecorder === 'left') dom.buttons.recordLeft.disabled = false;
-            else dom.buttons.recordRight.disabled = false;
+            const activeRecordButton = (state.activeRecorder === 'left') ? dom.buttons.recordLeft : dom.buttons.recordRight;
+            activeRecordButton.disabled = false;
         } else if (!isBusy) {
+            // Re-enable buttons based on state
             Object.values(dom.buttons).forEach(btn => btn.disabled = false);
             dom.buttons.playLeft.disabled = !dom.textareas.left.value.trim();
             dom.buttons.playRight.disabled = !dom.textareas.right.value.trim();
+            dom.buttons.translate.disabled = !dom.textareas.left.value.trim() && !dom.textareas.right.value.trim();
         }
     }
-    
+
     async function callProxy(service, payload, responseType = 'text') {
-        const response = await fetch(CLOUD_FUNCTION_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ service, payload }) });
+        const response = await fetch(CLOUD_FUNCTION_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ service, payload })
+        });
+        
         if (!response.ok) {
             const errorBody = await response.text();
-            try { const errorJson = JSON.parse(errorBody); const message = errorJson.error?.message || errorJson.message || JSON.stringify(errorJson); throw new Error(message); }
-            catch (e) { throw new Error(`Lỗi HTTP ${response.status}: ${errorBody}`); }
+            try {
+                const errorJson = JSON.parse(errorBody);
+                const message = errorJson.error?.message || errorJson.message || JSON.stringify(errorJson);
+                throw new Error(message);
+            } catch (e) {
+                throw new Error(`Lỗi HTTP ${response.status}: ${errorBody}`);
+            }
         }
-        if (responseType === 'json') return response.json(); if (responseType === 'blob') return response.blob(); return response.text();
+        
+        if (responseType === 'json') return response.json();
+        if (responseType === 'blob') return response.blob();
+        return response.text();
     }
     
-    // ===>>> SỬA LỖI UI: Tách biệt logic Dịch Văn Bản và Dịch Từ Giọng Nói <<<===
     async function translateText(sourceTextarea, targetTextarea, sourceLang, targetLang) {
         const textToTranslate = sourceTextarea.value.trim();
         if (!textToTranslate) {
             throw new Error("Không có văn bản để dịch.");
         }
         updateUiState('Đang dịch...', 'processing');
-        const result = await callProxy('translate', { text: textToTranslate, sourceLang: sourceLang.translate, targetLang: targetLang.translate });
+        const result = await callProxy('translate', {
+            text: textToTranslate,
+            sourceLang: sourceLang.translate,
+            targetLang: targetLang.translate
+        });
         targetTextarea.value = result;
     }
 
     async function handleTextTranslation() {
         if (state.isProcessing || state.isRecording) return;
         state.isProcessing = true;
+        
         const [sourceKey, targetKey] = state.direction.split('-to-');
         const sourceTextarea = (sourceKey === 'vi') ? dom.textareas.left : dom.textareas.right;
         const targetTextarea = (sourceKey === 'vi') ? dom.textareas.right : dom.textareas.left;
+        
         try {
             if (!sourceTextarea.value.trim()) {
                 updateUiState('Vui lòng nhập văn bản để dịch.', 'error');
@@ -92,7 +438,7 @@
             await translateText(sourceTextarea, targetTextarea, langConfig[sourceKey], langConfig[targetKey]);
             updateUiState('Dịch thành công!', 'idle');
         } catch (error) {
-            updateUiState(error.message, 'error');
+            updateUiState(`Lỗi dịch: ${error.message}`, 'error');
         } finally {
             state.isProcessing = false;
             updateUiState(dom.statusText.textContent, dom.statusBar.classList.contains('status-error') ? 'error' : 'idle');
@@ -101,23 +447,31 @@
     
     async function processAudio(base64Audio, sourcePanel) {
         state.isProcessing = true;
-        const [sourceKey, targetKey] = state.direction.split('-to-');
-        const sourcePanelKey = (sourcePanel === 'left') ? sourceKey : targetKey;
-        const targetPanelKey = (sourcePanel === 'left') ? targetKey : sourceKey;
-        const sourceTextarea = (sourcePanel === 'left') ? dom.textareas.left : dom.textareas.right;
+        const [sourceDirectionKey, targetDirectionKey] = state.direction.split('-to-');
+        const isLeftPanelSource = state.direction === 'vi-to-zh';
+        
+        const sourceLangKey = (sourcePanel === 'left') ? (isLeftPanelSource ? 'vi' : 'zh') : (isLeftPanelSource ? 'zh' : 'vi');
+        const targetLangKey = (sourceLangKey === 'vi') ? 'zh' : 'vi';
+        
+        const sourceTextarea = dom.textareas[sourcePanel];
         const targetTextarea = (sourcePanel === 'left') ? dom.textareas.right : dom.textareas.left;
 
         try {
             updateUiState('Đang nhận diện giọng nói...', 'processing');
-            const sttResult = await callProxy('stt', { audio_base64: base64Audio, encoding: 'WEBM_OPUS', languageCode: langConfig[sourcePanelKey].stt }, 'json');
+            const sttResult = await callProxy('stt', {
+                audio_base64: base64Audio,
+                encoding: 'WEBM_OPUS',
+                languageCode: langConfig[sourceLangKey].stt
+            }, 'json');
+            
             const transcription = sttResult.transcription;
             if (!transcription) throw new Error("Không nhận diện được giọng nói.");
             sourceTextarea.value = transcription;
-            // Sau khi có text, tự động dịch
-            await translateText(sourceTextarea, targetTextarea, langConfig[sourcePanelKey], langConfig[targetPanelKey]);
+            
+            await translateText(sourceTextarea, targetTextarea, langConfig[sourceLangKey], langConfig[targetLangKey]);
             updateUiState('Hoàn tất!', 'idle');
         } catch (error) {
-            updateUiState(error.message, 'error');
+            updateUiState(`Lỗi xử lý audio: ${error.message}`, 'error');
         } finally {
             state.isProcessing = false;
             updateUiState(dom.statusText.textContent, dom.statusBar.classList.contains('status-error') ? 'error' : 'idle');
@@ -126,48 +480,114 @@
 
     async function handleRecord(sourcePanel) {
         if (state.isProcessing || (state.isRecording && state.activeRecorder !== sourcePanel)) return;
-        if (state.isRecording) { state.mediaRecorder.stop(); return; }
+        
+        if (state.isRecording) {
+            state.mediaRecorder.stop();
+            return;
+        }
+        
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             state.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
             state.mediaRecorder.start();
-            state.activeRecorder = sourcePanel; state.isRecording = true;
-            dom.buttons[`record${sourcePanel.charAt(0).toUpperCase() + sourcePanel.slice(1)}`].classList.add('recording');
+            
+            state.activeRecorder = sourcePanel;
+            state.isRecording = true;
+            const recordButton = dom.buttons[`record${sourcePanel.charAt(0).toUpperCase() + sourcePanel.slice(1)}`];
+            recordButton.classList.add('recording');
             updateUiState('Đang ghi âm... Nhấn lại để dừng.', 'processing');
+            
             state.audioChunks = [];
             state.mediaRecorder.addEventListener("dataavailable", e => state.audioChunks.push(e.data));
+            
             state.mediaRecorder.addEventListener("stop", () => {
-                dom.buttons[`record${sourcePanel.charAt(0).toUpperCase() + sourcePanel.slice(1)}`].classList.remove('recording');
+                recordButton.classList.remove('recording');
                 state.isRecording = false;
+                
                 const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm;codecs=opus' });
-                const reader = new FileReader(); reader.readAsDataURL(audioBlob);
-                reader.onloadend = () => { const base64String = reader.result.split(',')[1]; processAudio(base64String, sourcePanel); };
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => {
+                    const base64String = reader.result.split(',')[1];
+                    processAudio(base64String, sourcePanel);
+                };
+                
                 stream.getTracks().forEach(track => track.stop());
             });
-        } catch (err) { updateUiState("Lỗi: Không thể truy cập micro.", 'error'); }
+        } catch (err) {
+            updateUiState("Lỗi: Không thể truy cập micro. Vui lòng cấp quyền.", 'error');
+        }
     }
     
     async function handlePlay(panel) {
-        if(state.isProcessing || state.isRecording) return;
+        if (state.isProcessing || state.isRecording) return;
+        
         const [sourceKey, targetKey] = state.direction.split('-to-');
         const langKey = (panel === 'left') ? sourceKey : targetKey;
-        const text = (panel === 'left') ? dom.textareas.left.value : dom.textareas.right.value;
+        const text = dom.textareas[panel].value.trim();
+        
         if (!text) return;
-        state.isProcessing = true; updateUiState(`Đang tạo âm thanh...`, 'processing');
+        state.isProcessing = true;
+        updateUiState(`Đang tạo âm thanh...`, 'processing');
+        
         try {
-            const ttsResult = await callProxy('tts', { text: text, languageCode: langConfig[langKey].stt, voiceName: langConfig[langKey].tts }, 'blob');
+            const ttsResult = await callProxy('tts', {
+                text: text,
+                languageCode: langConfig[langKey].stt,
+                voiceName: langConfig[langKey].tts
+            }, 'blob');
+            
             const audio = new Audio(URL.createObjectURL(ttsResult));
-            audio.play(); audio.onended = () => { state.isProcessing = false; updateUiState('Sẵn sàng.', 'idle'); };
-        } catch (error) { state.isProcessing = false; updateUiState(error.message, 'error'); }
+            audio.play();
+            audio.onended = () => {
+                state.isProcessing = false;
+                updateUiState('Sẵn sàng.', 'idle');
+            };
+        } catch (error) {
+            state.isProcessing = false;
+            updateUiState(`Lỗi phát âm thanh: ${error.message}`, 'error');
+        }
     }
     
-    dom.buttons.swap.addEventListener("click",()=>{if(state.isRecording||state.isProcessing)return;state.direction="vi-to-zh"===state.direction?"zh-to-vi":"vi-to-zh",[dom.textareas.left.value,dom.textareas.right.value]=[dom.textareas.right.value,dom.textareas.left.value];const[e,t]=state.direction.split("-to-");dom.labels.left.textContent=langConfig[e].name,dom.labels.right.textContent=langConfig[t].name,updateUiState("Đã đảo chiều dịch.","idle")});
+    // --- Event Listeners ---
+    dom.buttons.swap.addEventListener("click", () => {
+        if (state.isRecording || state.isProcessing) return;
+        state.direction = state.direction === "vi-to-zh" ? "zh-to-vi" : "vi-to-zh";
+        [dom.textareas.left.value, dom.textareas.right.value] = [dom.textareas.right.value, dom.textareas.left.value];
+        const [sourceKey, targetKey] = state.direction.split("-to-");
+        dom.labels.left.textContent = langConfig[sourceKey].name;
+        dom.labels.right.textContent = langConfig[targetKey].name;
+        
+        // Cập nhật placeholder
+        const isViLeft = sourceKey === 'vi';
+        dom.textareas.left.readOnly = !isViLeft;
+        dom.textareas.right.readOnly = isViLeft;
+        dom.textareas.left.placeholder = isViLeft ? "Nhập văn bản..." : "Bản dịch";
+        dom.textareas.right.placeholder = isViLeft ? "Bản dịch" : "Nhập văn bản...";
+
+
+        updateUiState("Đã đảo chiều dịch.", "idle");
+    });
+    
     dom.buttons.translate.addEventListener("click", handleTextTranslation);
-    dom.buttons.recordLeft.addEventListener("click",()=>handleRecord("left"));
-    dom.buttons.recordRight.addEventListener("click",()=>handleRecord("right"));
-    dom.buttons.playLeft.addEventListener("click",()=>handlePlay("left"));
-    dom.buttons.playRight.addEventListener("click",()=>handlePlay("right"));
-    document.addEventListener("DOMContentLoaded",()=>{const[e,t]=state.direction.split("-to-");dom.labels.left.textContent=langConfig[e].name,dom.labels.right.textContent=langConfig[t].name,updateUiState("Sẵn sàng.","idle")});
+    dom.buttons.recordLeft.addEventListener("click", () => handleRecord("left"));
+    dom.buttons.recordRight.addEventListener("click", () => handleRecord("right"));
+    dom.buttons.playLeft.addEventListener("click", () => handlePlay("left"));
+    dom.buttons.playRight.addEventListener("click", () => handlePlay("right"));
+    
+    ['left', 'right'].forEach(panel => {
+        dom.textareas[panel].addEventListener('input', () => {
+           updateUiState(dom.statusText.textContent, dom.statusBar.classList.contains('status-error') ? 'error' : 'idle');
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const [sourceKey, targetKey] = state.direction.split("-to-");
+        dom.labels.left.textContent = langConfig[sourceKey].name;
+        dom.labels.right.textContent = langConfig[targetKey].name;
+        updateUiState("Sẵn sàng.", "idle");
+    });
 </script>
+
 </body>
 </html>
